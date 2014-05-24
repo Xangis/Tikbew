@@ -81,7 +81,7 @@ MainWindow::MainWindow( )
 
 	_btnAbout = new QPushButton( this );
     _btnAbout->setIcon(QPixmap(question_xpm));
-	_btnAbout->setToolTip("About Vorbital Player.");
+	_btnAbout->setToolTip("About Tikbew.");
     connect(_btnAbout, SIGNAL(released()), this, SLOT(OnAbout()));
     firstRowLayout->addWidget(_btnAbout);
 
@@ -147,9 +147,9 @@ void MainWindow::OnButtonPauseClick()
 void MainWindow::OnAbout()
 {
 #ifdef WIN32
-    QMessageBox::about(this, "Vorbital Player 4.0", "Vorbital Player 4.0\nCopyright 2006-2013 Zeta Centauri.\nDeveloped by Jason Champion.\nThe Vorbital Player is free software and may be distributed freely.\nhttp://vorbitalplayer.com\nVorbital uses the libogg 1.3.0, libvorbis 1.3.3, wavpack 4.60.1, mpg123 1.14.2, and libsndfile 1.0.25 libraries.");
+    QMessageBox::about(this, "TikBew 1.0", "TikBew 1.0\nCopyright 2014 Zeta Centauri.\nDeveloped by Jason Champion.\nTikBew is free software and may be distributed freely.\nhttp://tikbew.com\nTikBew uses the Qt libraries.");
 #else
-    QMessageBox::about(this, "Vorbital Player 4.0", "Vorbital Player 4.0\nCopyright 2006-2013 Zeta Centauri.\nDeveloped by Jason Champion.\nThe Vorbital Player is free software and may be distributed freely.\nhttp://vorbitalplayer.com\nVorbital uses the libogg, libvorbis, wavpack, mpg123, and libsndfile libraries.");
+    QMessageBox::about(this, "TikBew 1.0", "TikBew 1.0\nCopyright 2014 Zeta Centauri.\nDeveloped by Jason Champion.\nTikBew is free software and may be distributed freely.\nhttp://tikbew.com\nTikBew uses the Qt libraries.");
 #endif
 }
 
