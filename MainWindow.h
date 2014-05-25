@@ -6,6 +6,9 @@
 #include <QLineEdit>
 #include <QWebView>
 
+#define VERSION_STRING "1.0"
+#define HOME_URL "http://tikbew.com/search/?v=1.0"
+
 class MainWindow: public QDialog
 {
     Q_OBJECT

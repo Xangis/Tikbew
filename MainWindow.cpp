@@ -40,7 +40,6 @@ MainWindow::MainWindow( )
     _btnBack = NULL;
     _btnReload = NULL;
 
-    qDebug() << "CreateControls.";
     setAcceptDrops(true);
 
     QVBoxLayout* rootLayout = new QVBoxLayout();
@@ -125,15 +124,17 @@ MainWindow::MainWindow( )
     rootLayout->addLayout(secondRowLayout);
 
     _browser = new QWebView(this);
-    _browser->setUrl(QUrl("http://tikbew.com"));
+    _browser->setUrl(QUrl(HOME_URL));
     secondRowLayout->addWidget(_browser);
 
-    connect(_browser,SIGNAL(urlChanged(QUrl)),this, SLOT(UpdateUrl()));
-    connect(_browser,SIGNAL(titleChanged(QString)),this, SLOT(UpdateTitle()));
+    connect(_browser, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
+    connect(_browser, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
+    connect(_txtURL, SIGNAL(returnPressed()), _btnGo, SIGNAL(clicked()));
+    connect(_txtSearch, SIGNAL(returnPressed()), _btnSearch, SIGNAL(clicked()));
 
     QIcon icon = QIcon(QPixmap(TikBew32_xpm));
     setWindowIcon(icon);
-
+    resize(QSize(1024, 768));
 	LoadSettings();
 }
 
@@ -204,7 +205,7 @@ void MainWindow::OnButtonSearchClick()
 
 void MainWindow::OnButtonHomeClick()
 {
-    _browser->setUrl(QUrl("http://tikbew.com"));
+    _browser->setUrl(QUrl(HOME_URL));
 }
 
 /**
@@ -213,9 +214,11 @@ void MainWindow::OnButtonHomeClick()
 void MainWindow::OnAbout()
 {
 #ifdef WIN32
-    QMessageBox::about(this, "TikBew 1.0", "TikBew 1.0\nCopyright 2014 Zeta Centauri.\nDeveloped by Jason Champion.\nTikBew is free software and may be distributed freely.\nhttp://tikbew.com\nTikBew uses the Qt libraries.");
+    QMessageBox::about(this, QString("TikBew ") + QString(VERSION_STRING),
+                       QString("TikBew ") + QString(VERSION_STRING) + QString("\nCopyright 2014 Zeta Centauri.\nDeveloped by Jason Champion.\nTikBew is free software and may be distributed freely.\nhttp://tikbew.com\nTikBew uses the Qt libraries."));
 #else
-    QMessageBox::about(this, "TikBew 1.0", "TikBew 1.0\nCopyright 2014 Zeta Centauri.\nDeveloped by Jason Champion.\nTikBew is free software and may be distributed freely.\nhttp://tikbew.com\nTikBew uses the Qt libraries.");
+    QMessageBox::about(this, QString("TikBew ") + QString(VERSION_STRING),
+                       QString("TikBew ") + QString(VERSION_STRING) + QString("\nCopyright 2014 Zeta Centauri.\nDeveloped by Jason Champion.\nTikBew is free software and may be distributed freely.\nhttp://tikbew.com\nTikBew uses the Qt libraries."));
 #endif
 }
 

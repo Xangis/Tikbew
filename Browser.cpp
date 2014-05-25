@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 {
     QApplication app(argc, argv);
     app.setApplicationName(QString("TikBew"));
-    app.setApplicationVersion(QString("1.0"));
+    app.setApplicationVersion(QString(VERSION_STRING));
     MainWindow* mainWindow = new MainWindow();
     mainWindow->setWindowFlags(Qt::Window);
     mainWindow->show();
