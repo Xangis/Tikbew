@@ -12,3 +12,7 @@ QT += core gui widgets webkit webkitwidgets
 HEADERS += MainWindow.h
 
 SOURCES += Browser.cpp MainWindow.cpp
+
+win32 {
+DESTDIR = E:\Tikbew\
+}

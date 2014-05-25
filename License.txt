@@ -1,0 +1,17 @@
+Copyright (c) 2014 Championix, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to use it
+in any way they see fit but for the exception in the next paragraph, and to
+publish and redistribute copies of the software without any other restrictions,
+provided that this notice is included.
+
+This software may not be used to harm a Human being in any way.
+
+The software is provided "as is", without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose and noninfringement. In no event shall the
+authors or copyright holders be liable for any claim, damages or other liability,
+real or imagined, whether in an action of contract, tort or otherwise, arising from,
+out of or in connection with the software or the use or other dealings in the
+software.
