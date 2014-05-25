@@ -18,6 +18,9 @@
 #include "question.xpm"
 #include "remove.xpm"
 #include "play.xpm"
+#include "home.xpm"
+#include "back.xpm"
+#include "reload.xpm"
 #include "TikBew32.xpm"
 
 MainWindow::~MainWindow()
@@ -49,7 +52,7 @@ MainWindow::MainWindow( )
     rootLayout->addLayout(topRowLayout);
 
     _btnBack = new QPushButton( this );
-    _btnBack->setIcon(QPixmap(reverse_xpm));
+    _btnBack->setIcon(QPixmap(back_xpm));
     _btnBack->setToolTip("Previous page.");
     connect(_btnBack, SIGNAL(released()), this, SLOT(OnButtonBackClick()));
     topRowLayout->addWidget(_btnBack);
@@ -107,13 +110,13 @@ MainWindow::MainWindow( )
     topRowLayout->addWidget(_btnSmaller);
 
     _btnHome = new QPushButton( this );
-    _btnHome->setIcon(QPixmap(stop_xpm));
+    _btnHome->setIcon(QPixmap(home_xpm));
     _btnHome->setToolTip("Home.");
     connect(_btnHome, SIGNAL(released()), this, SLOT(OnButtonHomeClick()));
     topRowLayout->addWidget(_btnHome);
 
     _btnReload = new QPushButton( this );
-    _btnReload->setIcon(QPixmap(reverse_xpm));
+    _btnReload->setIcon(QPixmap(reload_xpm));
     _btnReload->setToolTip("Reload page.");
     connect(_btnReload, SIGNAL(released()), this, SLOT(OnButtonReloadClick()));
     topRowLayout->addWidget(_btnReload);

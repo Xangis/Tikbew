@@ -14,7 +14,7 @@
 AppId={{027A06AA-7EAC-4157-99AE-D8CA213775E2}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
+AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
@@ -25,8 +25,9 @@ DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=E:\Tikbew\License.txt
 OutputDir=E:\Tikbew\Build
-OutputBaseFilename=Tikbew1.0Setup
+OutputBaseFilename={#MyAppName}{#MyAppVersion}Setup
 SetupIconFile=E:\Tikbew\TikBew32.ico
+UninstallDisplayIcon={app}\TikBew32.ico
 Compression=lzma
 SolidCompression=yes
 
@@ -61,9 +62,10 @@ Source: "E:\Tikbew\TikBew64.png"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"
+Name: "{group}\TikBew Website"; Filename: "{#MyAppURL}"
+Name: "{group}\WbSrch Website"; Filename: "http://wbsrch.com"
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; WorkingDir: "{app}"
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent

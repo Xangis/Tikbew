@@ -16,3 +16,5 @@ SOURCES += Browser.cpp MainWindow.cpp
 win32 {
 DESTDIR = E:\Tikbew\
 }
+
+win32:RC_ICONS += E:\Tikbew\TikBew32.ico
