@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QWebView>
 
 class MainWindow: public QDialog
 {
@@ -14,20 +15,32 @@ public:
     void LoadSettings();
     void SaveSettings();
 public slots:
-    void OnButtonBrowseClick();
+    void OnButtonLargerClick();
+    void OnButtonSmallerClick();
     void OnButtonStopClick();
     void OnButtonForwardClick();
-    void OnButtonReverseClick();
-    void OnButtonPauseClick();
+    void OnButtonReloadClick();
+    void OnButtonBackClick();
+    void OnButtonGoClick();
+    void OnButtonSearchClick();
+    void OnButtonHomeClick();
+    void UpdateUrl();
+    void UpdateTitle();
     void OnAbout();
 private:
-    QPushButton* _btnBrowse;
+    QPushButton* _btnLarger;
     QPushButton* _btnStop;
     QPushButton* _btnForward;
-    QPushButton* _btnReverse;
+    QPushButton* _btnSmaller;
     QPushButton* _btnAbout;
+    QPushButton* _btnSearch;
+    QPushButton* _btnReload;
+    QPushButton* _btnBack;
+    QPushButton* _btnHome;
+    QPushButton* _btnGo;
     QLineEdit* _txtURL;
     QLineEdit* _txtSearch;
+    QWebView* _browser;
 };
 
 #endif

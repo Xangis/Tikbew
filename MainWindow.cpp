@@ -11,13 +11,14 @@
 #include <QCloseEvent>
 #include <QDebug>
 #include <QMimeData>
-#include <QWebView>
 
 #include "stop.xpm"
 #include "add.xpm"
 #include "reverse.xpm"
-#include "forward.xpm"
 #include "question.xpm"
+#include "remove.xpm"
+#include "play.xpm"
+#include "TikBew32.xpm"
 
 MainWindow::~MainWindow()
 {
@@ -28,11 +29,16 @@ MainWindow::~MainWindow()
  */
 MainWindow::MainWindow( )
 {
-    _btnBrowse = NULL;
+    _btnLarger = NULL;
 	_btnStop = NULL;
 	_btnForward = NULL;
-	_btnReverse = NULL;
+    _btnSmaller = NULL;
 	_btnAbout = NULL;
+    _btnGo = NULL;
+    _btnSearch = NULL;
+    _btnHome = NULL;
+    _btnBack = NULL;
+    _btnReload = NULL;
 
     qDebug() << "CreateControls.";
     setAcceptDrops(true);
@@ -46,8 +52,20 @@ MainWindow::MainWindow( )
     _txtURL = new QLineEdit( this );
     topRowLayout->addWidget(_txtURL);
 
+    _btnGo = new QPushButton( this );
+    _btnGo->setIcon(QPixmap(play_xpm));
+    _btnGo->setToolTip("Go.");
+    connect(_btnGo, SIGNAL(released()), this, SLOT(OnButtonGoClick()));
+    topRowLayout->addWidget(_btnGo);
+
     _txtSearch = new QLineEdit( this );
     topRowLayout->addWidget(_txtSearch);
+
+    _btnSearch = new QPushButton( this );
+    _btnSearch->setIcon(QPixmap(play_xpm));
+    _btnSearch->setToolTip("Search.");
+    connect(_btnSearch, SIGNAL(released()), this, SLOT(OnButtonSearchClick()));
+    topRowLayout->addWidget(_btnSearch);
 
     QHBoxLayout* firstRowLayout = new QHBoxLayout();
     rootLayout->addLayout(firstRowLayout);
@@ -55,17 +73,35 @@ MainWindow::MainWindow( )
     firstRowLayout->setContentsMargins(QMargins(0,0,0,0));
     firstRowLayout->setSpacing(2);
 
-	_btnBrowse = new QPushButton( this );
-    _btnBrowse->setIcon(QPixmap(add_xpm));
-	_btnBrowse->setToolTip("Add file to playlist.");
-    connect(_btnBrowse, SIGNAL(released()), this, SLOT(OnButtonBrowseClick()));
-    firstRowLayout->addWidget(_btnBrowse);
+    _btnLarger = new QPushButton( this );
+    _btnLarger->setIcon(QPixmap(add_xpm));
+    _btnLarger->setToolTip("Larger page");
+    connect(_btnLarger, SIGNAL(released()), this, SLOT(OnButtonLargerClick()));
+    firstRowLayout->addWidget(_btnLarger);
 
-	_btnReverse = new QPushButton( this );
-    _btnReverse->setIcon(QPixmap(reverse_xpm));
-	_btnReverse->setToolTip("Previous track.");
-    connect(_btnReverse, SIGNAL(released()), this, SLOT(OnButtonReverseClick()));
-    firstRowLayout->addWidget(_btnReverse);
+    _btnSmaller = new QPushButton( this );
+    _btnSmaller->setIcon(QPixmap(remove_xpm));
+    _btnSmaller->setToolTip("Smaller page.");
+    connect(_btnSmaller, SIGNAL(released()), this, SLOT(OnButtonSmallerClick()));
+    firstRowLayout->addWidget(_btnSmaller);
+
+    _btnHome = new QPushButton( this );
+    _btnHome->setIcon(QPixmap(stop_xpm));
+    _btnHome->setToolTip("Home.");
+    connect(_btnHome, SIGNAL(released()), this, SLOT(OnButtonHomeClick()));
+    firstRowLayout->addWidget(_btnHome);
+
+    _btnBack = new QPushButton( this );
+    _btnBack->setIcon(QPixmap(reverse_xpm));
+    _btnBack->setToolTip("Previous page.");
+    connect(_btnBack, SIGNAL(released()), this, SLOT(OnButtonBackClick()));
+    firstRowLayout->addWidget(_btnBack);
+
+    _btnReload = new QPushButton( this );
+    _btnReload->setIcon(QPixmap(reverse_xpm));
+    _btnReload->setToolTip("Reload page.");
+    connect(_btnReload, SIGNAL(released()), this, SLOT(OnButtonReloadClick()));
+    firstRowLayout->addWidget(_btnReload);
 
 	_btnStop = new QPushButton( this );
     _btnStop->setIcon(QPixmap(stop_xpm));
@@ -74,8 +110,8 @@ MainWindow::MainWindow( )
     firstRowLayout->addWidget(_btnStop);
 
     _btnForward = new QPushButton( this );
-    _btnForward->setIcon(QPixmap(forward_xpm));
-	_btnForward->setToolTip("Next track.");
+    _btnForward->setIcon(QPixmap(play_xpm));
+    _btnForward->setToolTip("Forward.");
     connect(_btnForward, SIGNAL(released()), this, SLOT(OnButtonForwardClick()));
     firstRowLayout->addWidget(_btnForward);
 
@@ -88,11 +124,27 @@ MainWindow::MainWindow( )
     QHBoxLayout* secondRowLayout = new QHBoxLayout();
     rootLayout->addLayout(secondRowLayout);
 
-    QWebView* view = new QWebView(this);
-    view->setUrl(QUrl("http://tikbew.com"));
-    secondRowLayout->addWidget(view);
+    _browser = new QWebView(this);
+    _browser->setUrl(QUrl("http://tikbew.com"));
+    secondRowLayout->addWidget(_browser);
+
+    connect(_browser,SIGNAL(urlChanged(QUrl)),this, SLOT(UpdateUrl()));
+    connect(_browser,SIGNAL(titleChanged(QString)),this, SLOT(UpdateTitle()));
+
+    QIcon icon = QIcon(QPixmap(TikBew32_xpm));
+    setWindowIcon(icon);
 
 	LoadSettings();
+}
+
+void MainWindow::UpdateUrl()
+{
+    _txtURL->setText(_browser->url().toString());
+}
+
+void MainWindow::UpdateTitle()
+{
+    setWindowTitle(_browser->title() + QString("- TikBew"));
 }
 
 void MainWindow::LoadSettings()
@@ -103,43 +155,57 @@ void MainWindow::SaveSettings()
 {
 }
 
-void MainWindow::OnButtonBrowseClick()
+void MainWindow::OnButtonLargerClick()
 {
+    _browser->setZoomFactor(_browser->zoomFactor() + 0.1);
+}
+
+void MainWindow::OnButtonSmallerClick()
+{
+    _browser->setZoomFactor(_browser->zoomFactor() - 0.1);
 }
 
 void MainWindow::OnButtonStopClick()
 {
-}
-
-void MainWindow::OnButtonReverseClick()
-{
+    _browser->triggerPageAction(QWebPage::Stop);
 }
 
 void MainWindow::OnButtonForwardClick()
 {
+    _browser->triggerPageAction(QWebPage::Forward);
 }
 
-void MainWindow::OnButtonPauseClick()
+void MainWindow::OnButtonReloadClick()
 {
+    _browser->triggerPageAction(QWebPage::Reload);
 }
 
-/**
-* Quit handler.
-*/
-/*void MainWindow::OnQuit()
+void MainWindow::OnButtonBackClick()
 {
-	SaveSettings();
-	_done = true;
-#ifdef WIN32
-	Sleep(50);
-#else
-    usleep(50);
-#endif
-    qDebug() << "Closing OpenAL context and device.";
-    alcMakeContextCurrent(NULL);
-    alcDestroyContext(_context);
-    alcCloseDevice(_device);
-}*/
+    _browser->triggerPageAction(QWebPage::Back);
+}
+
+void MainWindow::OnButtonGoClick()
+{
+    QString url = _txtURL->text();
+    if( !url.startsWith(QString("http")))
+    {
+        url = QString("http://") + url;
+    }
+    _browser->setUrl(QUrl(url));
+}
+
+void MainWindow::OnButtonSearchClick()
+{
+    QString searchTerm = _txtSearch->text();
+    QString url = QString("http://wbsrch.com/search/?s=tikbew&q=") + searchTerm;
+    _browser->setUrl(QUrl(url));
+}
+
+void MainWindow::OnButtonHomeClick()
+{
+    _browser->setUrl(QUrl("http://tikbew.com"));
+}
 
 /**
 * Shows the about box.
