@@ -208,6 +208,10 @@ void MainWindow::CloseCurrentTab()
 
 void MainWindow::CloseTab(int index)
 {
+    if( _tabs->count() == 1)
+    {
+        SaveSettings();
+    }
     QWidget* tab = _tabs->widget(index);
     _tabs->removeTab(index);
     tab->deleteLater();
