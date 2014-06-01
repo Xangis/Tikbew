@@ -57,6 +57,7 @@ Source: "E:\Tikbew\Build\Qt5PrintSupport.dll"; DestDir: "{app}"; Flags: ignoreve
 Source: "E:\Tikbew\Build\icuin52.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Tikbew\Build\icuuc52.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Tikbew\Build\icudt52.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Tikbew\Build\platforms\qwindows.dll"; DestDir: "{app}\platforms"; Flags: ignoreversion
 Source: "E:\Tikbew\TikBew32.png"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Tikbew\TikBew64.png"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
