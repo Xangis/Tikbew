@@ -11,6 +11,7 @@
 #include <QCloseEvent>
 #include <QDebug>
 #include <QMimeData>
+#include <QShortcut>
 
 #include "stop.xpm"
 #include "add.xpm"
@@ -52,8 +53,10 @@ MainWindow::MainWindow( )
 
     _btnBack = new QPushButton( this );
     _btnBack->setIcon(QPixmap(back_xpm));
-    _btnBack->setToolTip("Previous page.");
+    _btnBack->setToolTip("Previous page (Alt+Left)");
     connect(_btnBack, SIGNAL(released()), this, SLOT(OnButtonBackClick()));
+    QShortcut* shortcutAltLeft = new QShortcut(QKeySequence("Alt+Left"), this);
+    connect(shortcutAltLeft, SIGNAL(activated()), this, SLOT(OnButtonBackClick()));
     topRowLayout->addWidget(_btnBack);
 
     _btnStop = new QPushButton( this );
@@ -64,12 +67,16 @@ MainWindow::MainWindow( )
 
     _btnForward = new QPushButton( this );
     _btnForward->setIcon(QPixmap(play_xpm));
-    _btnForward->setToolTip("Forward.");
+    _btnForward->setToolTip("Forward (Alt+Right)");
     connect(_btnForward, SIGNAL(released()), this, SLOT(OnButtonForwardClick()));
+    QShortcut* shortcutAltRight = new QShortcut(QKeySequence("Alt+Right"), this);
+    connect(shortcutAltRight, SIGNAL(activated()), this, SLOT(OnButtonForwardClick()));
     topRowLayout->addWidget(_btnForward);
 
     _txtURL = new QLineEdit( this );
     connect(_txtURL, SIGNAL(returnPressed()), this, SLOT(OnButtonGoClick()));
+    QShortcut* shortcutAltD = new QShortcut(QKeySequence("Alt+D"), this);
+    connect(shortcutAltD, SIGNAL(activated()), _txtURL, SLOT(setFocus()));
     topRowLayout->addWidget(_txtURL);
 
     //_btnGo = new QPushButton( this );
@@ -98,14 +105,18 @@ MainWindow::MainWindow( )
 
     _btnLarger = new QPushButton( this );
     _btnLarger->setIcon(QPixmap(add_xpm));
-    _btnLarger->setToolTip("Larger page");
+    _btnLarger->setToolTip("Larger page (Ctrl++)");
     connect(_btnLarger, SIGNAL(released()), this, SLOT(OnButtonLargerClick()));
+    QShortcut* shortcutCtrlPlus = new QShortcut(QKeySequence::ZoomIn, this);
+    connect(shortcutCtrlPlus, SIGNAL(activated()), this, SLOT(OnButtonLargerClick()));
     topRowLayout->addWidget(_btnLarger);
 
     _btnSmaller = new QPushButton( this );
     _btnSmaller->setIcon(QPixmap(remove_xpm));
-    _btnSmaller->setToolTip("Smaller page.");
+    _btnSmaller->setToolTip("Smaller page (Ctrl+-)");
     connect(_btnSmaller, SIGNAL(released()), this, SLOT(OnButtonSmallerClick()));
+    QShortcut* shortcutCtrlMinus = new QShortcut(QKeySequence::ZoomOut, this);
+    connect(shortcutCtrlMinus, SIGNAL(activated()), this, SLOT(OnButtonSmallerClick()));
     topRowLayout->addWidget(_btnSmaller);
 
     _btnHome = new QPushButton( this );
@@ -116,14 +127,18 @@ MainWindow::MainWindow( )
 
     _btnReload = new QPushButton( this );
     _btnReload->setIcon(QPixmap(reload_xpm));
-    _btnReload->setToolTip("Reload page.");
+    _btnReload->setToolTip("Reload page (F5)");
     connect(_btnReload, SIGNAL(released()), this, SLOT(OnButtonReloadClick()));
+    QShortcut* shortcutF5 = new QShortcut(QKeySequence::Refresh, this);
+    connect(shortcutF5, SIGNAL(activated()), this, SLOT(OnButtonReloadClick()));
     topRowLayout->addWidget(_btnReload);
 
     _btnAbout = new QPushButton( this );
     _btnAbout->setIcon(QPixmap(question_xpm));
-    _btnAbout->setToolTip("About Tikbew.");
+    _btnAbout->setToolTip("About Tikbew (F1)");
     connect(_btnAbout, SIGNAL(released()), this, SLOT(OnAbout()));
+    QShortcut* shortcutF1 = new QShortcut(QKeySequence::HelpContents, this);
+    connect(shortcutF1, SIGNAL(activated()), this, SLOT(OnAbout()));
     topRowLayout->addWidget(_btnAbout);
 
     QHBoxLayout* secondRowLayout = new QHBoxLayout();
@@ -136,6 +151,8 @@ MainWindow::MainWindow( )
     connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(TabChanged(int)));
     connect(_tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
     secondRowLayout->addWidget(_tabs);
+    QShortcut* shortcutCtrlT = new QShortcut(QKeySequence::AddTab, this);
+    connect(shortcutCtrlT, SIGNAL(activated()), this, SLOT(OnAddTab()));
 
     QWebView* webView = new QWebView(this);
     webView->setUrl(QUrl(HOME_URL));
@@ -145,7 +162,7 @@ MainWindow::MainWindow( )
 
     _btnAddTab = new QPushButton(this);
     _btnAddTab->setIcon(QPixmap(add_xpm));
-    _btnAddTab->setToolTip("Add tab.");
+    _btnAddTab->setToolTip("Add tab (Ctrl+T)");
     connect(_btnAddTab, SIGNAL(released()), this, SLOT(OnAddTab()));
     //_tabs->addTab(_btnAddTab);
     _tabs->setCornerWidget(_btnAddTab);
@@ -160,12 +177,21 @@ MainWindow::MainWindow( )
         button->setDefault(false);
         button->setAutoDefault(false);
     }
+
+    QShortcut* shortcutCtrlW = new QShortcut(QKeySequence("Ctrl+W"), this);
+    connect(shortcutCtrlW, SIGNAL(activated()), this, SLOT(CloseCurrentTab()));
+
     LoadSettings();
 }
 
 void MainWindow::TabChanged(int index)
 {
     UpdateUrl();
+}
+
+void MainWindow::CloseCurrentTab()
+{
+    CloseTab(_tabs->currentIndex());
 }
 
 void MainWindow::CloseTab(int index)

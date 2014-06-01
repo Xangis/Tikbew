@@ -34,6 +34,7 @@ public slots:
     void OnAddTab();
     void TabChanged(int index);
     void CloseTab(int index);
+    void CloseCurrentTab();
 private:
     QPushButton* _btnLarger;
     QPushButton* _btnStop;
