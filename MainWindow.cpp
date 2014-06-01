@@ -14,7 +14,6 @@
 
 #include "stop.xpm"
 #include "add.xpm"
-#include "reverse.xpm"
 #include "question.xpm"
 #include "remove.xpm"
 #include "play.xpm"
@@ -33,10 +32,10 @@ MainWindow::~MainWindow()
 MainWindow::MainWindow( )
 {
     _btnLarger = NULL;
-	_btnStop = NULL;
-	_btnForward = NULL;
+    _btnStop = NULL;
+    _btnForward = NULL;
     _btnSmaller = NULL;
-	_btnAbout = NULL;
+    _btnAbout = NULL;
     _btnGo = NULL;
     _btnSearch = NULL;
     _btnHome = NULL;
@@ -121,23 +120,35 @@ MainWindow::MainWindow( )
     connect(_btnReload, SIGNAL(released()), this, SLOT(OnButtonReloadClick()));
     topRowLayout->addWidget(_btnReload);
 
-	_btnAbout = new QPushButton( this );
+    _btnAbout = new QPushButton( this );
     _btnAbout->setIcon(QPixmap(question_xpm));
-	_btnAbout->setToolTip("About Tikbew.");
+    _btnAbout->setToolTip("About Tikbew.");
     connect(_btnAbout, SIGNAL(released()), this, SLOT(OnAbout()));
     topRowLayout->addWidget(_btnAbout);
 
     QHBoxLayout* secondRowLayout = new QHBoxLayout();
     rootLayout->addLayout(secondRowLayout);
 
-    _browser = new QWebView(this);
-    _browser->setUrl(QUrl(HOME_URL));
-    secondRowLayout->addWidget(_browser);
+    _tabs = new QTabWidget();
+    _tabs->setTabsClosable(true);
+    _tabs->setMovable(true);
+    _tabs->setUsesScrollButtons(true);
+    connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(TabChanged(int)));
+    connect(_tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
+    secondRowLayout->addWidget(_tabs);
 
-    connect(_browser, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
-    connect(_browser, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
-    //connect(_txtURL, SIGNAL(returnPressed()), _btnGo, SIGNAL(clicked()));
-    //connect(_txtSearch, SIGNAL(returnPressed()), _btnSearch, SIGNAL(clicked()));
+    QWebView* webView = new QWebView(this);
+    webView->setUrl(QUrl(HOME_URL));
+    connect(webView, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
+    connect(webView, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
+    _tabs->addTab(webView, "Tikbew");
+
+    _btnAddTab = new QPushButton(this);
+    _btnAddTab->setIcon(QPixmap(add_xpm));
+    _btnAddTab->setToolTip("Add tab.");
+    connect(_btnAddTab, SIGNAL(released()), this, SLOT(OnAddTab()));
+    //_tabs->addTab(_btnAddTab);
+    _tabs->setCornerWidget(_btnAddTab);
 
     QIcon icon = QIcon(QPixmap(TikBew32_xpm));
     setWindowIcon(icon);
@@ -149,17 +160,30 @@ MainWindow::MainWindow( )
         button->setDefault(false);
         button->setAutoDefault(false);
     }
-	LoadSettings();
+    LoadSettings();
+}
+
+void MainWindow::TabChanged(int index)
+{
+    UpdateUrl();
+}
+
+void MainWindow::CloseTab(int index)
+{
+    QWidget* tab = _tabs->widget(index);
+    _tabs->removeTab(index);
+    tab->deleteLater();
 }
 
 void MainWindow::UpdateUrl()
 {
-    _txtURL->setText(_browser->url().toString());
+    _txtURL->setText(((QWebView*)_tabs->currentWidget())->url().toString());
 }
 
 void MainWindow::UpdateTitle()
 {
-    setWindowTitle(_browser->title() + QString(" - TikBew"));
+    setWindowTitle(((QWebView*)_tabs->currentWidget())->title() + QString(" - TikBew"));
+    _tabs->setTabText(_tabs->currentIndex(), ((QWebView*)_tabs->currentWidget())->title());
 }
 
 void MainWindow::LoadSettings()
@@ -172,32 +196,42 @@ void MainWindow::SaveSettings()
 
 void MainWindow::OnButtonLargerClick()
 {
-    _browser->setZoomFactor(_browser->zoomFactor() + 0.1);
+    ((QWebView*)_tabs->currentWidget())->setZoomFactor(((QWebView*)_tabs->currentWidget())->zoomFactor() + 0.1);
 }
 
 void MainWindow::OnButtonSmallerClick()
 {
-    _browser->setZoomFactor(_browser->zoomFactor() - 0.1);
+    ((QWebView*)_tabs->currentWidget())->setZoomFactor(((QWebView*)_tabs->currentWidget())->zoomFactor() - 0.1);
 }
 
 void MainWindow::OnButtonStopClick()
 {
-    _browser->triggerPageAction(QWebPage::Stop);
+    ((QWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Stop);
 }
 
 void MainWindow::OnButtonForwardClick()
 {
-    _browser->triggerPageAction(QWebPage::Forward);
+    ((QWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Forward);
 }
 
 void MainWindow::OnButtonReloadClick()
 {
-    _browser->triggerPageAction(QWebPage::Reload);
+    ((QWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Reload);
 }
 
 void MainWindow::OnButtonBackClick()
 {
-    _browser->triggerPageAction(QWebPage::Back);
+    ((QWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Back);
+}
+
+void MainWindow::OnAddTab()
+{
+    QWebView* newTab = new QWebView(this);
+    newTab->setUrl(QUrl(HOME_URL));
+    connect(newTab, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
+    connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
+    _tabs->addTab(newTab, "TikBew");
+    _tabs->setCurrentIndex(_tabs->count() -1);
 }
 
 void MainWindow::OnButtonGoClick()
@@ -207,19 +241,19 @@ void MainWindow::OnButtonGoClick()
     {
         url = QString("http://") + url;
     }
-    _browser->setUrl(QUrl(url));
+    ((QWebView*)_tabs->currentWidget())->setUrl(QUrl(url));
 }
 
 void MainWindow::OnButtonSearchClick()
 {
     QString searchTerm = _txtSearch->text();
     QString url = QString("http://wbsrch.com/search/?s=tikbew&q=") + searchTerm;
-    _browser->setUrl(QUrl(url));
+    ((QWebView*)_tabs->currentWidget())->setUrl(QUrl(url));
 }
 
 void MainWindow::OnButtonHomeClick()
 {
-    _browser->setUrl(QUrl(HOME_URL));
+    ((QWebView*)_tabs->currentWidget())->setUrl(QUrl(HOME_URL));
 }
 
 /**

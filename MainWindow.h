@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QWebView>
+#include <QTabWidget>
 
 #define VERSION_STRING "1.0"
 #define HOME_URL "http://tikbew.com/search/?v=1.0"
@@ -30,6 +31,9 @@ public slots:
     void UpdateUrl();
     void UpdateTitle();
     void OnAbout();
+    void OnAddTab();
+    void TabChanged(int index);
+    void CloseTab(int index);
 private:
     QPushButton* _btnLarger;
     QPushButton* _btnStop;
@@ -41,9 +45,10 @@ private:
     QPushButton* _btnBack;
     QPushButton* _btnHome;
     QPushButton* _btnGo;
+    QPushButton* _btnAddTab;
     QLineEdit* _txtURL;
     QLineEdit* _txtSearch;
-    QWebView* _browser;
+    QTabWidget* _tabs;
 };
 
 #endif
