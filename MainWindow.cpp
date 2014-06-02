@@ -184,9 +184,21 @@ MainWindow::MainWindow( )
     LoadSettings();
 }
 
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    OnQuit();
+    event->accept();
+}
+
+void MainWindow::OnQuit()
+{
+    SaveSettings();
+}
+
 void MainWindow::TabChanged(int index)
 {
     UpdateUrl();
+    UpdateTitle();
 }
 
 void MainWindow::CloseCurrentTab()
@@ -196,6 +208,10 @@ void MainWindow::CloseCurrentTab()
 
 void MainWindow::CloseTab(int index)
 {
+    if( _tabs->count() == 1)
+    {
+        SaveSettings();
+    }
     QWidget* tab = _tabs->widget(index);
     _tabs->removeTab(index);
     tab->deleteLater();
@@ -214,10 +230,29 @@ void MainWindow::UpdateTitle()
 
 void MainWindow::LoadSettings()
 {
+    _settings = new QSettings();
+    QString loadedURLs = _settings->value("loadedURLs").toString();
+    QStringList urls = loadedURLs.split(";;");
+    for( int i = 0; i < urls.count(); i++)
+    {
+        QWebView* newTab = new QWebView(this);
+        _tabs->addTab(newTab, "TikBew");
+        connect(newTab, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
+        connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
+        newTab->setUrl(QUrl(urls[i]));
+    }
 }
 
 void MainWindow::SaveSettings()
 {
+    QStringList urls;
+    for( int i = 0; i < _tabs->count(); i++)
+    {
+        urls.append(((QWebView*)(_tabs->widget(i)))->url().toString());
+    }
+    QString loadedURLs = urls.join(";;");
+    _settings->setValue("loadedURLs", loadedURLs);
+    _settings->sync();
 }
 
 void MainWindow::OnButtonLargerClick()
@@ -253,10 +288,10 @@ void MainWindow::OnButtonBackClick()
 void MainWindow::OnAddTab()
 {
     QWebView* newTab = new QWebView(this);
-    newTab->setUrl(QUrl(HOME_URL));
     connect(newTab, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
     connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
     _tabs->addTab(newTab, "TikBew");
+    newTab->setUrl(QUrl(HOME_URL));
     _tabs->setCurrentIndex(_tabs->count() -1);
 }
 

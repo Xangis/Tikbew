@@ -6,6 +6,8 @@
 #include <QLineEdit>
 #include <QWebView>
 #include <QTabWidget>
+#include <QSettings>
+#include <QCloseEvent>
 
 #define VERSION_STRING "1.0"
 #define HOME_URL "http://tikbew.com/search/?v=1.0"
@@ -35,6 +37,8 @@ public slots:
     void TabChanged(int index);
     void CloseTab(int index);
     void CloseCurrentTab();
+    void closeEvent(QCloseEvent *);
+    void OnQuit();
 private:
     QPushButton* _btnLarger;
     QPushButton* _btnStop;
@@ -50,6 +54,7 @@ private:
     QLineEdit* _txtURL;
     QLineEdit* _txtSearch;
     QTabWidget* _tabs;
+    QSettings* _settings;
 };
 
 #endif
