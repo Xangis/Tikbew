@@ -195,7 +195,7 @@ void MainWindow::OnQuit()
     SaveSettings();
 }
 
-void MainWindow::TabChanged(int index)
+void MainWindow::TabChanged(int)
 {
     UpdateUrl();
     UpdateTitle();
