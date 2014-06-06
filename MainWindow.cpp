@@ -16,11 +16,13 @@
 #include "stop.xpm"
 #include "add.xpm"
 #include "question.xpm"
-#include "remove.xpm"
 #include "play.xpm"
 #include "home.xpm"
 #include "back.xpm"
 #include "reload.xpm"
+#include "smaller.xpm"
+#include "larger.xpm"
+#include "go.xpm"
 #include "TikBew32.xpm"
 
 MainWindow::~MainWindow()
@@ -63,12 +65,6 @@ MainWindow::MainWindow( )
     connect(shortcutAltLeft, SIGNAL(activated()), this, SLOT(OnButtonBackClick()));
     topRowLayout->addWidget(_btnBack);
 
-    _btnStop = new QPushButton( this );
-    _btnStop->setIcon(QPixmap(stop_xpm));
-    _btnStop->setToolTip("Stop.");
-    connect(_btnStop, SIGNAL(released()), this, SLOT(OnButtonStopClick()));
-    topRowLayout->addWidget(_btnStop);
-
     _btnForward = new QPushButton( this );
     _btnForward->setIcon(QPixmap(play_xpm));
     _btnForward->setToolTip("Forward (Alt+Right)");
@@ -84,7 +80,7 @@ MainWindow::MainWindow( )
     topRowLayout->addWidget(_txtURL);
 
     _btnGo = new QPushButton( this );
-    _btnGo->setIcon(QPixmap(play_xpm));
+    _btnGo->setIcon(QPixmap(go_xpm));
     _btnGo->setToolTip("Go.");
     _btnGo->setAutoDefault(true);
     _btnGo->setDefault(true);
@@ -92,7 +88,7 @@ MainWindow::MainWindow( )
     topRowLayout->addWidget(_btnGo);
 
     _btnLarger = new QPushButton( this );
-    _btnLarger->setIcon(QPixmap(add_xpm));
+    _btnLarger->setIcon(QPixmap(larger_xpm));
     _btnLarger->setToolTip("Larger page (Ctrl++)");
     connect(_btnLarger, SIGNAL(released()), this, SLOT(OnButtonLargerClick()));
     QShortcut* shortcutCtrlPlus = new QShortcut(QKeySequence::ZoomIn, this);
@@ -100,7 +96,7 @@ MainWindow::MainWindow( )
     topRowLayout->addWidget(_btnLarger);
 
     _btnSmaller = new QPushButton( this );
-    _btnSmaller->setIcon(QPixmap(remove_xpm));
+    _btnSmaller->setIcon(QPixmap(smaller_xpm));
     _btnSmaller->setToolTip("Smaller page (Ctrl+-)");
     connect(_btnSmaller, SIGNAL(released()), this, SLOT(OnButtonSmallerClick()));
     QShortcut* shortcutCtrlMinus = new QShortcut(QKeySequence::ZoomOut, this);
@@ -146,6 +142,8 @@ MainWindow::MainWindow( )
     webView->setUrl(QUrl(HOME_URL));
     connect(webView, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
     connect(webView, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
+    connect(webView, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
+    connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
     _tabs->addTab(webView, "Tikbew");
 
     _btnAddTab = new QPushButton(this);
@@ -181,6 +179,22 @@ void MainWindow::TabChanged(int)
 {
     UpdateUrl();
     UpdateTitle();
+}
+
+void MainWindow::LoadStarted()
+{
+    _btnGo->setIcon(QPixmap(stop_xpm));
+    _btnGo->setToolTip("Stop.");
+    disconnect(_btnGo, SIGNAL(released()), this, SLOT(OnButtonGoClick()));
+    connect(_btnGo, SIGNAL(released()), this, SLOT(OnButtonStopClick()));
+}
+
+void MainWindow::LoadFinished(bool)
+{
+    _btnGo->setIcon(QPixmap(go_xpm));
+    _btnGo->setToolTip("Go.");
+    disconnect(_btnGo, SIGNAL(released()), this, SLOT(OnButtonStopClick()));
+    connect(_btnGo, SIGNAL(released()), this, SLOT(OnButtonGoClick()));
 }
 
 void MainWindow::CloseCurrentTab()
@@ -262,6 +276,10 @@ void MainWindow::OnButtonSmallerClick()
 void MainWindow::OnButtonStopClick()
 {
     ((QWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Stop);
+    _btnGo->setIcon(QPixmap(go_xpm));
+    _btnGo->setToolTip("Go.");
+    disconnect(_btnGo, SIGNAL(released()), this, SLOT(OnButtonStopClick()));
+    connect(_btnGo, SIGNAL(released()), this, SLOT(OnButtonGoClick()));
 }
 
 void MainWindow::OnButtonForwardClick()

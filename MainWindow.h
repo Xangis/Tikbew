@@ -36,6 +36,8 @@ public slots:
     void TabChanged(int index);
     void CloseTab(int index);
     void CloseCurrentTab();
+    void LoadStarted();
+    void LoadFinished(bool);
     void closeEvent(QCloseEvent *);
     void OnQuit();
 private:
