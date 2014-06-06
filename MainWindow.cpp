@@ -46,6 +46,9 @@ MainWindow::MainWindow( )
 
     setAcceptDrops(true);
 
+    QIcon icon = QIcon(QPixmap(TikBew32_xpm));
+    setWindowIcon(icon);
+
     QVBoxLayout* rootLayout = new QVBoxLayout();
     rootLayout->setSpacing(0);
     rootLayout->setMargin(0);
@@ -134,34 +137,35 @@ MainWindow::MainWindow( )
     _tabs->setUsesScrollButtons(true);
     connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(TabChanged(int)));
     connect(_tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
-    secondRowLayout->addWidget(_tabs);
-    QShortcut* shortcutCtrlT = new QShortcut(QKeySequence::AddTab, this);
-    connect(shortcutCtrlT, SIGNAL(activated()), this, SLOT(OnAddTab()));
 
-    QWebView* webView = new QWebView(this);
-    webView->setUrl(QUrl(HOME_URL));
-    connect(webView, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
-    connect(webView, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
-    connect(webView, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
-    connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
-    _tabs->addTab(webView, "Tikbew");
+    LoadSettings();
+    // Only add a tab if one didn't load.
+    if(_tabs->count() < 1)
+    {
+        QWebView* webView = new QWebView(this);
+        webView->setUrl(QUrl(HOME_URL));
+        connect(webView, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
+        connect(webView, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
+        connect(webView, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
+        connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
+        _tabs->addTab(webView, "Tikbew");
+    }
 
     _btnAddTab = new QPushButton(this);
     _btnAddTab->setIcon(QPixmap(add_xpm));
     _btnAddTab->setToolTip("Add tab (Ctrl+T)");
     connect(_btnAddTab, SIGNAL(released()), this, SLOT(OnAddTab()));
-    //_tabs->addTab(_btnAddTab);
     _tabs->setCornerWidget(_btnAddTab);
 
-    QIcon icon = QIcon(QPixmap(TikBew32_xpm));
-    setWindowIcon(icon);
+    secondRowLayout->addWidget(_tabs);
+    QShortcut* shortcutCtrlT = new QShortcut(QKeySequence::AddTab, this);
+    connect(shortcutCtrlT, SIGNAL(activated()), this, SLOT(OnAddTab()));
+
     _txtURL->setFocus();
     QList<QPushButton*> buttonList = findChildren<QPushButton*>();
 
     QShortcut* shortcutCtrlW = new QShortcut(QKeySequence("Ctrl+W"), this);
     connect(shortcutCtrlW, SIGNAL(activated()), this, SLOT(CloseCurrentTab()));
-
-    LoadSettings();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
@@ -235,6 +239,8 @@ void MainWindow::LoadSettings()
         _tabs->addTab(newTab, "TikBew");
         connect(newTab, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
         connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
+        connect(newTab, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
+        connect(newTab, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
         newTab->setUrl(QUrl(urls[i]));
     }
     int w = _settings->value("width").toInt();
@@ -302,6 +308,8 @@ void MainWindow::OnAddTab()
     QWebView* newTab = new QWebView(this);
     connect(newTab, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
     connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
+    connect(newTab, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
+    connect(newTab, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
     _tabs->addTab(newTab, "TikBew");
     newTab->setUrl(QUrl(HOME_URL));
     _tabs->setCurrentIndex(_tabs->count() -1);
