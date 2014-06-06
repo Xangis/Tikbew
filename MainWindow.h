@@ -28,7 +28,6 @@ public slots:
     void OnButtonReloadClick();
     void OnButtonBackClick();
     void OnButtonGoClick();
-    void OnButtonSearchClick();
     void OnButtonHomeClick();
     void UpdateUrl();
     void UpdateTitle();
@@ -45,14 +44,12 @@ private:
     QPushButton* _btnForward;
     QPushButton* _btnSmaller;
     QPushButton* _btnAbout;
-    QPushButton* _btnSearch;
     QPushButton* _btnReload;
     QPushButton* _btnBack;
     QPushButton* _btnHome;
     QPushButton* _btnGo;
     QPushButton* _btnAddTab;
     QLineEdit* _txtURL;
-    QLineEdit* _txtSearch;
     QTabWidget* _tabs;
     QSettings* _settings;
 };

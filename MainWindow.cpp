@@ -38,7 +38,6 @@ MainWindow::MainWindow( )
     _btnSmaller = NULL;
     _btnAbout = NULL;
     _btnGo = NULL;
-    _btnSearch = NULL;
     _btnHome = NULL;
     _btnBack = NULL;
     _btnReload = NULL;
@@ -46,9 +45,14 @@ MainWindow::MainWindow( )
     setAcceptDrops(true);
 
     QVBoxLayout* rootLayout = new QVBoxLayout();
+    rootLayout->setSpacing(0);
+    rootLayout->setMargin(0);
+    rootLayout->setContentsMargins(0,0,0,0);
     setLayout(rootLayout);
 
     QHBoxLayout* topRowLayout = new QHBoxLayout();
+    topRowLayout->setSpacing(4);
+    topRowLayout->setMargin(3);
     rootLayout->addLayout(topRowLayout);
 
     _btnBack = new QPushButton( this );
@@ -79,29 +83,13 @@ MainWindow::MainWindow( )
     connect(shortcutAltD, SIGNAL(activated()), _txtURL, SLOT(setFocus()));
     topRowLayout->addWidget(_txtURL);
 
-    //_btnGo = new QPushButton( this );
-    //_btnGo->setIcon(QPixmap(play_xpm));
-    //_btnGo->setToolTip("Go.");
-    //connect(_btnGo, SIGNAL(released()), this, SLOT(OnButtonGoClick()));
-    //topRowLayout->addWidget(_btnGo);
-
-    _txtSearch = new QLineEdit( this );
-    _txtSearch->setMaximumWidth(200);
-    _txtSearch->setFixedWidth(200);
-    connect(_txtSearch, SIGNAL(returnPressed()), this, SLOT(OnButtonSearchClick()));
-    topRowLayout->addWidget(_txtSearch);
-
-    //_btnSearch = new QPushButton( this );
-    //_btnSearch->setIcon(QPixmap(play_xpm));
-    //_btnSearch->setToolTip("Search.");
-    //connect(_btnSearch, SIGNAL(released()), this, SLOT(OnButtonSearchClick()));
-    //topRowLayout->addWidget(_btnSearch);
-
-    //QHBoxLayout* firstRowLayout = new QHBoxLayout();
-    //rootLayout->addLayout(firstRowLayout);
-
-    //firstRowLayout->setContentsMargins(QMargins(0,0,0,0));
-    //firstRowLayout->setSpacing(2);
+    _btnGo = new QPushButton( this );
+    _btnGo->setIcon(QPixmap(play_xpm));
+    _btnGo->setToolTip("Go.");
+    _btnGo->setAutoDefault(true);
+    _btnGo->setDefault(true);
+    connect(_btnGo, SIGNAL(released()), this, SLOT(OnButtonGoClick()));
+    topRowLayout->addWidget(_btnGo);
 
     _btnLarger = new QPushButton( this );
     _btnLarger->setIcon(QPixmap(add_xpm));
@@ -169,14 +157,8 @@ MainWindow::MainWindow( )
 
     QIcon icon = QIcon(QPixmap(TikBew32_xpm));
     setWindowIcon(icon);
-    resize(QSize(1024, 768));
-    _txtSearch->setFocus();
+    _txtURL->setFocus();
     QList<QPushButton*> buttonList = findChildren<QPushButton*>();
-    foreach(QPushButton* button, buttonList)
-    {
-        button->setDefault(false);
-        button->setAutoDefault(false);
-    }
 
     QShortcut* shortcutCtrlW = new QShortcut(QKeySequence("Ctrl+W"), this);
     connect(shortcutCtrlW, SIGNAL(activated()), this, SLOT(CloseCurrentTab()));
@@ -241,6 +223,16 @@ void MainWindow::LoadSettings()
         connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
         newTab->setUrl(QUrl(urls[i]));
     }
+    int w = _settings->value("width").toInt();
+    int h = _settings->value("height").toInt();
+    if( w && h)
+    {
+        resize(QSize(w, h));
+    }
+    else
+    {
+        resize(QSize(1024, 768));
+    }
 }
 
 void MainWindow::SaveSettings()
@@ -252,6 +244,8 @@ void MainWindow::SaveSettings()
     }
     QString loadedURLs = urls.join(";;");
     _settings->setValue("loadedURLs", loadedURLs);
+    _settings->setValue("width", this->width());
+    _settings->setValue("height", this->height());
     _settings->sync();
 }
 
@@ -302,13 +296,6 @@ void MainWindow::OnButtonGoClick()
     {
         url = QString("http://") + url;
     }
-    ((QWebView*)_tabs->currentWidget())->setUrl(QUrl(url));
-}
-
-void MainWindow::OnButtonSearchClick()
-{
-    QString searchTerm = _txtSearch->text();
-    QString url = QString("http://wbsrch.com/search/?s=tikbew&q=") + searchTerm;
     ((QWebView*)_tabs->currentWidget())->setUrl(QUrl(url));
 }
 

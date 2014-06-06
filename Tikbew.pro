@@ -6,7 +6,7 @@ TEMPLATE = app
 TARGET = Tikbew
 INCLUDEPATH += /usr/include/qt5/QtWidgets/
 QT += core gui widgets webkit webkitwidgets
-#LIBS += 
+#LIBS +=
 
 # Input
 HEADERS += MainWindow.h
