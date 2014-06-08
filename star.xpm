@@ -1,5 +1,5 @@
 /* XPM */
-static char * star_xpm[] = {
+static const char * star_xpm[] = {
 "17 16 33 1",
 " 	c None",
 ".	c #313131",

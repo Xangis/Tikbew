@@ -8,6 +8,7 @@
 #include <QTabWidget>
 #include <QSettings>
 #include <QCloseEvent>
+#include <QComboBox>
 
 #define VERSION_STRING "1.0"
 #define HOME_URL "http://tikbew.com/search/?v=1.0"
@@ -33,6 +34,7 @@ public slots:
     void UpdateTitle();
     void OnAbout();
     void OnAddTab();
+    void OnAddBookmark();
     void TabChanged(int index);
     void CloseTab(int index);
     void CloseCurrentTab();
@@ -50,8 +52,10 @@ private:
     QPushButton* _btnBack;
     QPushButton* _btnHome;
     QPushButton* _btnGo;
+    QPushButton* _btnStar;
     QPushButton* _btnAddTab;
-    QLineEdit* _txtURL;
+    //QLineEdit* _txtURL;
+    QComboBox* _txtURL;
     QTabWidget* _tabs;
     QSettings* _settings;
 };

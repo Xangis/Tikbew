@@ -23,6 +23,7 @@
 #include "smaller.xpm"
 #include "larger.xpm"
 #include "go.xpm"
+#include "star.xpm"
 #include "TikBew32.xpm"
 
 MainWindow::~MainWindow()
@@ -62,6 +63,7 @@ MainWindow::MainWindow( )
 
     _btnBack = new QPushButton( this );
     _btnBack->setIcon(QPixmap(back_xpm));
+    _btnBack->setMaximumWidth(32);
     _btnBack->setToolTip("Previous page (Alt+Left)");
     connect(_btnBack, SIGNAL(released()), this, SLOT(OnButtonBackClick()));
     QShortcut* shortcutAltLeft = new QShortcut(QKeySequence("Alt+Left"), this);
@@ -70,28 +72,43 @@ MainWindow::MainWindow( )
 
     _btnForward = new QPushButton( this );
     _btnForward->setIcon(QPixmap(play_xpm));
+    _btnForward->setMaximumWidth(32);
     _btnForward->setToolTip("Forward (Alt+Right)");
     connect(_btnForward, SIGNAL(released()), this, SLOT(OnButtonForwardClick()));
     QShortcut* shortcutAltRight = new QShortcut(QKeySequence("Alt+Right"), this);
     connect(shortcutAltRight, SIGNAL(activated()), this, SLOT(OnButtonForwardClick()));
     topRowLayout->addWidget(_btnForward);
 
-    _txtURL = new QLineEdit( this );
-    connect(_txtURL, SIGNAL(returnPressed()), this, SLOT(OnButtonGoClick()));
+    //_txtURL = new QLineEdit( this );
+    _txtURL = new QComboBox(this);
+    _txtURL->setEditable(true);
+    _txtURL->setInsertPolicy(QComboBox::InsertAtTop);
+    _txtURL->setMinimumSize(200, -1);
+    //connect(_txtURL, SIGNAL(returnPressed()), this, SLOT(OnButtonGoClick()));
     QShortcut* shortcutAltD = new QShortcut(QKeySequence("Alt+D"), this);
     connect(shortcutAltD, SIGNAL(activated()), _txtURL, SLOT(setFocus()));
     topRowLayout->addWidget(_txtURL);
+    connect(_txtURL->lineEdit(), SIGNAL(returnPressed()), this, SLOT(OnButtonGoClick()));
 
     _btnGo = new QPushButton( this );
     _btnGo->setIcon(QPixmap(go_xpm));
+    _btnGo->setMaximumWidth(32);
     _btnGo->setToolTip("Go.");
     _btnGo->setAutoDefault(true);
     _btnGo->setDefault(true);
     connect(_btnGo, SIGNAL(released()), this, SLOT(OnButtonGoClick()));
     topRowLayout->addWidget(_btnGo);
 
+    _btnStar = new QPushButton( this );
+    _btnStar->setIcon(QPixmap(star_xpm));
+    _btnStar->setMaximumWidth(32);
+    _btnStar->setToolTip("Bookmark this page.");
+    connect(_btnStar, SIGNAL(released()), this, SLOT(OnAddBookmark()));
+    topRowLayout->addWidget(_btnStar);
+
     _btnLarger = new QPushButton( this );
     _btnLarger->setIcon(QPixmap(larger_xpm));
+    _btnLarger->setMaximumWidth(32);
     _btnLarger->setToolTip("Larger page (Ctrl++)");
     connect(_btnLarger, SIGNAL(released()), this, SLOT(OnButtonLargerClick()));
     QShortcut* shortcutCtrlPlus = new QShortcut(QKeySequence::ZoomIn, this);
@@ -100,6 +117,7 @@ MainWindow::MainWindow( )
 
     _btnSmaller = new QPushButton( this );
     _btnSmaller->setIcon(QPixmap(smaller_xpm));
+    _btnSmaller->setMaximumWidth(32);
     _btnSmaller->setToolTip("Smaller page (Ctrl+-)");
     connect(_btnSmaller, SIGNAL(released()), this, SLOT(OnButtonSmallerClick()));
     QShortcut* shortcutCtrlMinus = new QShortcut(QKeySequence::ZoomOut, this);
@@ -108,12 +126,14 @@ MainWindow::MainWindow( )
 
     _btnHome = new QPushButton( this );
     _btnHome->setIcon(QPixmap(home_xpm));
+    _btnHome->setMaximumWidth(32);
     _btnHome->setToolTip("Home.");
     connect(_btnHome, SIGNAL(released()), this, SLOT(OnButtonHomeClick()));
     topRowLayout->addWidget(_btnHome);
 
     _btnReload = new QPushButton( this );
     _btnReload->setIcon(QPixmap(reload_xpm));
+    _btnReload->setMaximumWidth(32);
     _btnReload->setToolTip("Reload page (F5)");
     connect(_btnReload, SIGNAL(released()), this, SLOT(OnButtonReloadClick()));
     QShortcut* shortcutF5 = new QShortcut(QKeySequence::Refresh, this);
@@ -122,6 +142,7 @@ MainWindow::MainWindow( )
 
     _btnAbout = new QPushButton( this );
     _btnAbout->setIcon(QPixmap(question_xpm));
+    _btnAbout->setMaximumWidth(32);
     _btnAbout->setToolTip("About Tikbew (F1)");
     connect(_btnAbout, SIGNAL(released()), this, SLOT(OnAbout()));
     QShortcut* shortcutF1 = new QShortcut(QKeySequence::HelpContents, this);
@@ -206,6 +227,13 @@ void MainWindow::CloseCurrentTab()
     CloseTab(_tabs->currentIndex());
 }
 
+void MainWindow::OnAddBookmark()
+{
+    // TODO: Don't allow duplicates.
+    // TODO: Allow bookmark removal.
+    _txtURL->addItem(((QWebView*)_tabs->currentWidget())->url().toString());
+}
+
 void MainWindow::CloseTab(int index)
 {
     if( _tabs->count() == 1)
@@ -219,7 +247,8 @@ void MainWindow::CloseTab(int index)
 
 void MainWindow::UpdateUrl()
 {
-    _txtURL->setText(((QWebView*)_tabs->currentWidget())->url().toString());
+    //_txtURL->setText(((QWebView*)_tabs->currentWidget())->url().toString());
+    _txtURL->lineEdit()->setText(((QWebView*)_tabs->currentWidget())->url().toString());
 }
 
 void MainWindow::UpdateTitle()
@@ -243,6 +272,12 @@ void MainWindow::LoadSettings()
         connect(newTab, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
         newTab->setUrl(QUrl(urls[i]));
     }
+    QString bookmarkedURLs = _settings->value("bookmarkedURLs").toString();
+    QStringList bookmarks = bookmarkedURLs.split(";;");
+    for( int i = 0; i < bookmarks.count(); i++)
+    {
+        _txtURL->addItem(bookmarks[i]);
+    }
     int w = _settings->value("width").toInt();
     int h = _settings->value("height").toInt();
     if( w && h)
@@ -263,7 +298,16 @@ void MainWindow::SaveSettings()
         urls.append(((QWebView*)(_tabs->widget(i)))->url().toString());
     }
     QString loadedURLs = urls.join(";;");
+
+    QStringList bookmarks;
+    for( int i = 0; i < _txtURL->count(); i++)
+    {
+        bookmarks.append(_txtURL->itemText(i));
+    }
+    QString loadedBookmarks = bookmarks.join(";;");
+
     _settings->setValue("loadedURLs", loadedURLs);
+    _settings->setValue("bookmarkedURLs", loadedBookmarks);
     _settings->setValue("width", this->width());
     _settings->setValue("height", this->height());
     _settings->sync();
@@ -317,7 +361,8 @@ void MainWindow::OnAddTab()
 
 void MainWindow::OnButtonGoClick()
 {
-    QString url = _txtURL->text();
+    //QString url = _txtURL->text();
+    QString url = _txtURL->currentText();
     if( !url.startsWith(QString("http")))
     {
         url = QString("http://") + url;
