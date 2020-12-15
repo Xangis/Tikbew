@@ -9,9 +9,11 @@ QT += core gui widgets webkit webkitwidgets
 #LIBS +=
 
 # Input
-HEADERS += MainWindow.h
+HEADERS += MainWindow.h \
+    TikWebView.h
 
-SOURCES += Browser.cpp MainWindow.cpp
+SOURCES += Browser.cpp MainWindow.cpp \
+    TikWebView.cpp URLBar.cpp
 
 win32 {
 DESTDIR = E:\Tikbew\
