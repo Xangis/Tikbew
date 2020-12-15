@@ -1,4 +1,4 @@
-2.0.2
+2.0.2 (2020)
 -----
 Built with Qt 5.5.1.
 Built with MinGW 4.9.2 32-bit and no longer uses visual C++ redistributable.
@@ -8,6 +8,7 @@ Your Browser Is: Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, l
 -------------
 May not have ever been released publicly.
 Your Browser Is: Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) TikBew/2.0 Safari/538.1
+Your Language Setting Is: en-US,*
 
 2.0 (2015):
 -----------
