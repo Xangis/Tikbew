@@ -9,9 +9,10 @@
 #include <QSettings>
 #include <QCloseEvent>
 #include <QComboBox>
+#include "URLBar.h"
 
-#define VERSION_STRING "1.0"
-#define HOME_URL "http://tikbew.com/search/?v=1.0"
+#define VERSION_STRING "2.0"
+#define HOME_URL "https://wbsrch.com"
 
 class MainWindow: public QDialog
 {
@@ -54,8 +55,7 @@ private:
     QPushButton* _btnGo;
     QPushButton* _btnStar;
     QPushButton* _btnAddTab;
-    //QLineEdit* _txtURL;
-    QComboBox* _txtURL;
+    URLBar* _txtURL;
     QTabWidget* _tabs;
     QSettings* _settings;
 };

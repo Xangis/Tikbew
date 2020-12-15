@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <QMimeData>
 #include <QShortcut>
+#include "TikWebView.h"
 
 #include "stop.xpm"
 #include "add.xpm"
@@ -80,15 +81,20 @@ MainWindow::MainWindow( )
     topRowLayout->addWidget(_btnForward);
 
     //_txtURL = new QLineEdit( this );
-    _txtURL = new QComboBox(this);
+    _txtURL = new URLBar(this);
     _txtURL->setEditable(true);
     _txtURL->setInsertPolicy(QComboBox::InsertAtTop);
-    _txtURL->setMinimumSize(200, -1);
-    //connect(_txtURL, SIGNAL(returnPressed()), this, SLOT(OnButtonGoClick()));
+#ifdef WIN32
+    _txtURL->setMinimumSize(200, 28);
+#else
+    _txtURL->setMinimumSize(200, 32);
+#endif
+    connect(_txtURL, SIGNAL(returnPressed()), this, SLOT(OnButtonGoClick()));
     QShortcut* shortcutAltD = new QShortcut(QKeySequence("Alt+D"), this);
     connect(shortcutAltD, SIGNAL(activated()), _txtURL, SLOT(setFocus()));
     topRowLayout->addWidget(_txtURL);
-    connect(_txtURL->lineEdit(), SIGNAL(returnPressed()), this, SLOT(OnButtonGoClick()));
+    //connect(_txtURL, SIGNAL(activated()), _txtURL, SLOT(selectAll()));
+    //connect(_txtURL->lineEdit(), SIGNAL(returnPressed()), this, SLOT(OnButtonGoClick()));
 
     _btnGo = new QPushButton( this );
     _btnGo->setIcon(QPixmap(go_xpm));
@@ -109,7 +115,7 @@ MainWindow::MainWindow( )
     _btnLarger = new QPushButton( this );
     _btnLarger->setIcon(QPixmap(larger_xpm));
     _btnLarger->setMaximumWidth(32);
-    _btnLarger->setToolTip("Larger page (Ctrl++)");
+    _btnLarger->setToolTip("Zoom In (Ctrl++)");
     connect(_btnLarger, SIGNAL(released()), this, SLOT(OnButtonLargerClick()));
     QShortcut* shortcutCtrlPlus = new QShortcut(QKeySequence::ZoomIn, this);
     connect(shortcutCtrlPlus, SIGNAL(activated()), this, SLOT(OnButtonLargerClick()));
@@ -118,7 +124,7 @@ MainWindow::MainWindow( )
     _btnSmaller = new QPushButton( this );
     _btnSmaller->setIcon(QPixmap(smaller_xpm));
     _btnSmaller->setMaximumWidth(32);
-    _btnSmaller->setToolTip("Smaller page (Ctrl+-)");
+    _btnSmaller->setToolTip("Zoom Out (Ctrl+-)");
     connect(_btnSmaller, SIGNAL(released()), this, SLOT(OnButtonSmallerClick()));
     QShortcut* shortcutCtrlMinus = new QShortcut(QKeySequence::ZoomOut, this);
     connect(shortcutCtrlMinus, SIGNAL(activated()), this, SLOT(OnButtonSmallerClick()));
@@ -143,7 +149,7 @@ MainWindow::MainWindow( )
     _btnAbout = new QPushButton( this );
     _btnAbout->setIcon(QPixmap(question_xpm));
     _btnAbout->setMaximumWidth(32);
-    _btnAbout->setToolTip("About Tikbew (F1)");
+    _btnAbout->setToolTip("About WbBrowse (F1)");
     connect(_btnAbout, SIGNAL(released()), this, SLOT(OnAbout()));
     QShortcut* shortcutF1 = new QShortcut(QKeySequence::HelpContents, this);
     connect(shortcutF1, SIGNAL(activated()), this, SLOT(OnAbout()));
@@ -156,6 +162,9 @@ MainWindow::MainWindow( )
     _tabs->setTabsClosable(true);
     _tabs->setMovable(true);
     _tabs->setUsesScrollButtons(true);
+    // This sets the size of the widget, not the tab.
+    //_tabs->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    _tabs->setStyleSheet(QString("QTabBar::tab { width: 176px; } "));
     connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(TabChanged(int)));
     connect(_tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
 
@@ -163,13 +172,13 @@ MainWindow::MainWindow( )
     // Only add a tab if one didn't load.
     if(_tabs->count() < 1)
     {
-        QWebView* webView = new QWebView(this);
+        TikWebView* webView = new TikWebView(this);
         webView->setUrl(QUrl(HOME_URL));
         connect(webView, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
         connect(webView, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
         connect(webView, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
         connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
-        _tabs->addTab(webView, "Tikbew");
+        _tabs->addTab(webView, "WbBrowse");
     }
 
     _btnAddTab = new QPushButton(this);
@@ -229,9 +238,32 @@ void MainWindow::CloseCurrentTab()
 
 void MainWindow::OnAddBookmark()
 {
-    // TODO: Don't allow duplicates.
     // TODO: Allow bookmark removal.
-    _txtURL->addItem(((QWebView*)_tabs->currentWidget())->url().toString());
+    QString currentURL = ((TikWebView*)_tabs->currentWidget())->url().toString();
+    if( currentURL == "" || currentURL == "http://" || currentURL == "https://")
+    {
+        QMessageBox box;
+        box.setWindowTitle("Nothing to Bookmark");
+        box.setText("You're not on a page.");
+        box.setStandardButtons(QMessageBox::Ok);
+        box.setDefaultButton(QMessageBox::Ok);
+        box.exec();
+        return;
+    }
+    for( int i = 0; i < _txtURL->count(); i++)
+    {
+        if(_txtURL->itemText(i) == currentURL)
+        {
+            QMessageBox box;
+            box.setWindowTitle("Already Bookmarked");
+            box.setText("You've already bookmarked this page.");
+            box.setStandardButtons(QMessageBox::Ok);
+            box.setDefaultButton(QMessageBox::Ok);
+            box.exec();
+            return;
+        }
+    }
+    _txtURL->addItem(currentURL);
 }
 
 void MainWindow::CloseTab(int index)
@@ -247,14 +279,13 @@ void MainWindow::CloseTab(int index)
 
 void MainWindow::UpdateUrl()
 {
-    //_txtURL->setText(((QWebView*)_tabs->currentWidget())->url().toString());
-    _txtURL->lineEdit()->setText(((QWebView*)_tabs->currentWidget())->url().toString());
+    _txtURL->lineEdit()->setText(((TikWebView*)_tabs->currentWidget())->url().toString());
 }
 
 void MainWindow::UpdateTitle()
 {
-    setWindowTitle(((QWebView*)_tabs->currentWidget())->title() + QString(" - TikBew"));
-    _tabs->setTabText(_tabs->currentIndex(), ((QWebView*)_tabs->currentWidget())->title());
+    setWindowTitle(((TikWebView*)_tabs->currentWidget())->title() + QString(" - WbBrowse"));
+    _tabs->setTabText(_tabs->currentIndex(), ((TikWebView*)_tabs->currentWidget())->title());
 }
 
 void MainWindow::LoadSettings()
@@ -264,8 +295,8 @@ void MainWindow::LoadSettings()
     QStringList urls = loadedURLs.split(";;");
     for( int i = 0; i < urls.count(); i++)
     {
-        QWebView* newTab = new QWebView(this);
-        _tabs->addTab(newTab, "TikBew");
+        TikWebView* newTab = new TikWebView(this);
+        _tabs->addTab(newTab, "WbBrowse");
         connect(newTab, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
         connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
         connect(newTab, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
@@ -295,7 +326,7 @@ void MainWindow::SaveSettings()
     QStringList urls;
     for( int i = 0; i < _tabs->count(); i++)
     {
-        urls.append(((QWebView*)(_tabs->widget(i)))->url().toString());
+        urls.append(((TikWebView*)(_tabs->widget(i)))->url().toString());
     }
     QString loadedURLs = urls.join(";;");
 
@@ -315,17 +346,17 @@ void MainWindow::SaveSettings()
 
 void MainWindow::OnButtonLargerClick()
 {
-    ((QWebView*)_tabs->currentWidget())->setZoomFactor(((QWebView*)_tabs->currentWidget())->zoomFactor() + 0.1);
+    ((TikWebView*)_tabs->currentWidget())->setZoomFactor(((TikWebView*)_tabs->currentWidget())->zoomFactor() + 0.1);
 }
 
 void MainWindow::OnButtonSmallerClick()
 {
-    ((QWebView*)_tabs->currentWidget())->setZoomFactor(((QWebView*)_tabs->currentWidget())->zoomFactor() - 0.1);
+    ((TikWebView*)_tabs->currentWidget())->setZoomFactor(((TikWebView*)_tabs->currentWidget())->zoomFactor() - 0.1);
 }
 
 void MainWindow::OnButtonStopClick()
 {
-    ((QWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Stop);
+    ((TikWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Stop);
     _btnGo->setIcon(QPixmap(go_xpm));
     _btnGo->setToolTip("Go.");
     disconnect(_btnGo, SIGNAL(released()), this, SLOT(OnButtonStopClick()));
@@ -334,45 +365,48 @@ void MainWindow::OnButtonStopClick()
 
 void MainWindow::OnButtonForwardClick()
 {
-    ((QWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Forward);
+    ((TikWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Forward);
 }
 
 void MainWindow::OnButtonReloadClick()
 {
-    ((QWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Reload);
+    ((TikWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Reload);
 }
 
 void MainWindow::OnButtonBackClick()
 {
-    ((QWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Back);
+    ((TikWebView*)_tabs->currentWidget())->triggerPageAction(QWebPage::Back);
 }
 
 void MainWindow::OnAddTab()
 {
-    QWebView* newTab = new QWebView(this);
+    TikWebView* newTab = new TikWebView(this);
     connect(newTab, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
     connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
     connect(newTab, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
     connect(newTab, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
-    _tabs->addTab(newTab, "TikBew");
+    _tabs->addTab(newTab, "WbBrowse");
     newTab->setUrl(QUrl(HOME_URL));
     _tabs->setCurrentIndex(_tabs->count() -1);
 }
 
 void MainWindow::OnButtonGoClick()
 {
-    //QString url = _txtURL->text();
-    QString url = _txtURL->currentText();
-    if( !url.startsWith(QString("http")))
-    {
-        url = QString("http://") + url;
-    }
-    ((QWebView*)_tabs->currentWidget())->setUrl(QUrl(url));
+    QUrl url = QUrl::fromUserInput(_txtURL->currentText());
+    QMessageBox box;
+//    box.setWindowTitle("Go clicked.");
+//    box.setText(url);
+//    box.setStandardButtons(QMessageBox::Ok);
+//    box.setDefaultButton(QMessageBox::Ok);
+//    box.exec();
+    ((TikWebView*)_tabs->currentWidget())->setUrl(QUrl(url));
+    //((TikWebView*)_tabs->currentWidget())->setUrl(QUrl(url));
+    //((TikWebView*)_tabs->currentWidget())->load(QUrl(url));
 }
 
 void MainWindow::OnButtonHomeClick()
 {
-    ((QWebView*)_tabs->currentWidget())->setUrl(QUrl(HOME_URL));
+    ((TikWebView*)_tabs->currentWidget())->setUrl(QUrl(HOME_URL));
 }
 
 /**
@@ -380,13 +414,8 @@ void MainWindow::OnButtonHomeClick()
 */
 void MainWindow::OnAbout()
 {
-#ifdef WIN32
-    QMessageBox::about(this, QString("TikBew ") + QString(VERSION_STRING),
-                       QString("TikBew ") + QString(VERSION_STRING) + QString("\nCopyright 2014 Championix, LLC.\nDeveloped by Jason Champion.\nTikBew is free software and may be distributed freely.\nhttp://tikbew.com\nTikBew uses the Qt libraries."));
-#else
-    QMessageBox::about(this, QString("TikBew ") + QString(VERSION_STRING),
-                       QString("TikBew ") + QString(VERSION_STRING) + QString("\nCopyright 2014 Championix, LLC.\nDeveloped by Jason Champion.\nTikBew is free software and may be distributed freely.\nhttp://tikbew.com\nTikBew uses the Qt libraries."));
-#endif
+    QMessageBox::about(this, QString("WbBrowse ") + QString(VERSION_STRING),
+                       QString("WbBrowse ") + QString(VERSION_STRING) + QString("\nCopyright 2014-2016 Zeta Centauri.\nDeveloped by Jason Champion.\nWbBrowse is free software and may be distributed freely.\nhttp://wbbrowse.com\nWbBrowse uses the Qt libraries."));
 }
 
 /**
