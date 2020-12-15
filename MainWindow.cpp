@@ -149,7 +149,7 @@ MainWindow::MainWindow( )
     _btnAbout = new QPushButton( this );
     _btnAbout->setIcon(QPixmap(question_xpm));
     _btnAbout->setMaximumWidth(32);
-    _btnAbout->setToolTip("About WbBrowse (F1)");
+    _btnAbout->setToolTip("About TikBew (F1)");
     connect(_btnAbout, SIGNAL(released()), this, SLOT(OnAbout()));
     QShortcut* shortcutF1 = new QShortcut(QKeySequence::HelpContents, this);
     connect(shortcutF1, SIGNAL(activated()), this, SLOT(OnAbout()));
@@ -178,7 +178,7 @@ MainWindow::MainWindow( )
         connect(webView, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
         connect(webView, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
         connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
-        _tabs->addTab(webView, "WbBrowse");
+        _tabs->addTab(webView, "TikBew");
     }
 
     _btnAddTab = new QPushButton(this);
@@ -284,7 +284,7 @@ void MainWindow::UpdateUrl()
 
 void MainWindow::UpdateTitle()
 {
-    setWindowTitle(((TikWebView*)_tabs->currentWidget())->title() + QString(" - WbBrowse"));
+    setWindowTitle(((TikWebView*)_tabs->currentWidget())->title() + QString(" - TikBew"));
     _tabs->setTabText(_tabs->currentIndex(), ((TikWebView*)_tabs->currentWidget())->title());
 }
 
@@ -296,7 +296,7 @@ void MainWindow::LoadSettings()
     for( int i = 0; i < urls.count(); i++)
     {
         TikWebView* newTab = new TikWebView(this);
-        _tabs->addTab(newTab, "WbBrowse");
+        _tabs->addTab(newTab, "TikBew");
         connect(newTab, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
         connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
         connect(newTab, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
@@ -385,7 +385,7 @@ void MainWindow::OnAddTab()
     connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
     connect(newTab, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
     connect(newTab, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
-    _tabs->addTab(newTab, "WbBrowse");
+    _tabs->addTab(newTab, "TikBew");
     newTab->setUrl(QUrl(HOME_URL));
     _tabs->setCurrentIndex(_tabs->count() -1);
 }
@@ -414,8 +414,8 @@ void MainWindow::OnButtonHomeClick()
 */
 void MainWindow::OnAbout()
 {
-    QMessageBox::about(this, QString("WbBrowse ") + QString(VERSION_STRING),
-                       QString("WbBrowse ") + QString(VERSION_STRING) + QString("\nCopyright 2014-2016 Zeta Centauri.\nDeveloped by Jason Champion.\nWbBrowse is free software and may be distributed freely.\nhttp://wbbrowse.com\nWbBrowse uses the Qt libraries."));
+    QMessageBox::about(this, QString("TikBew ") + QString(VERSION_STRING),
+                       QString("TikBew ") + QString(VERSION_STRING) + QString("\nCopyright 2014-2020 Lambda Centauri.\nDeveloped by Jason Champion.\nTikBew is free software and may be distributed freely.\nhttps://lambdacentauri.com/software_tikbew.htm\nTikBew uses the Qt libraries."));
 }
 
 /**

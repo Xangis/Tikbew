@@ -2,10 +2,11 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TikBew"
-#define MyAppVersion "2.0.1"
-#define MyAppPublisher "Zeta Centauri"
-#define MyAppURL "http://tikbew.com"
+#define MyAppVersion "2.0.2"
+#define MyAppPublisher "Lambda Centauri"
+#define MyAppURL "https://lambdacentauri.com/software_tikbew.htm"
 #define MyAppExeName "Tikbew.exe"
+#define CodeDir "E:\code\Tikbew"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -19,14 +20,14 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\{#MyAppName}
+DefaultDirName={pf}\{#MyAppPublisher}\{#MyAppName}
 DisableDirPage=yes
-DefaultGroupName={#MyAppName}
+DefaultGroupName={#MyAppPublisher}
 DisableProgramGroupPage=yes
-LicenseFile=E:\Tikbew\License.txt
-OutputDir=E:\Tikbew\Build
+LicenseFile={#CodeDir}\License.txt
+OutputDir={#CodeDir}\installer
 OutputBaseFilename={#MyAppName}{#MyAppVersion}Setup
-SetupIconFile=E:\Tikbew\TikBew32.ico
+SetupIconFile={#CodeDir}\TikBew32.ico
 UninstallDisplayIcon={app}\TikBew32.ico
 Compression=lzma
 SolidCompression=yes
@@ -38,45 +39,47 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "E:\Tikbew\icuin54.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\icuuc54.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\icudt54.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\libssl32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\License.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5Multimedia.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5MultimediaWidgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5OpenGL.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5Positioning.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5PrintSupport.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5Qml.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5Quick.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5Sensors.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5Sql.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5Webkit.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5WebChannel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5WebkitWidgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\platforms\qwindows.dll"; DestDir: "{app}\platforms"; Flags: ignoreversion
-Source: "E:\Tikbew\ssl_license.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\Tikbew.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\TikBew32.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\TikBew32.png"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Tikbew\TikBew64.png"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\icuin54.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\icuuc54.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\icudt54.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\libssl32.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\License.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Multimedia.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5MultimediaWidgets.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5OpenGL.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Positioning.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5PrintSupport.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Qml.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Quick.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Sensors.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Sql.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Webkit.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5WebChannel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5WebkitWidgets.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\platforms\qwindows.dll"; DestDir: "{app}\platforms"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\ssl_license.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\libstdc++-6.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\libwinpthread-1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Tikbew.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\TikBew32.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\TikBew32.png"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\TikBew64.png"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: "E:\Tikbew\vcredist_x86.exe"; DestDir: "{app}"; Flags: ignoreversion deleteafterinstall
+;Source: "{#CodeDir}\installer\vcredist_x86.exe"; DestDir: "{app}"; Flags: ignoreversion deleteafterinstall
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"
 Name: "{group}\TikBew Website"; Filename: "{#MyAppURL}"
-Name: "{group}\WbSrch Website"; Filename: "http://wbsrch.com"
 ;Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; WorkingDir: "{app}"
 
 [Run]
-Filename: "{app}\vcredist_x86.exe"; Parameters: "/q"; WorkingDir: "{app}";  StatusMsg: "Installing Visual C++ 2012 Redistributable..."; Flags: waituntilterminated
+;Filename: "{app}\vcredist_x86.exe"; Parameters: "/q /norestart"; WorkingDir: "{app}";  StatusMsg: "Installing Visual C++ 2012 Redistributable..."; Flags: waituntilterminated
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 

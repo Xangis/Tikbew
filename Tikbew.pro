@@ -16,7 +16,10 @@ SOURCES += Browser.cpp MainWindow.cpp \
     TikWebView.cpp URLBar.cpp
 
 win32 {
-DESTDIR = E:\Tikbew\
+DESTDIR = E:\code\Tikbew\installer\
 }
 
-win32:RC_ICONS += E:\Tikbew\TikBew32.ico
+win32:RC_ICONS += E:\code\Tikbew\TikBew32.ico
+
+DISTFILES += \
+    Changelog.txt
