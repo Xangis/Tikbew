@@ -1,7 +1,8 @@
-2.0.2 (2020)
------
+2.0.2 (2020-12-25):
+-------------------
 Built with Qt 5.5.1.
 Built with MinGW 4.9.2 32-bit and no longer uses visual C++ redistributable.
+Home page is now https://wbsrch.com.
 Your Browser Is: Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) TikBew/2.02 Safari/538.1
 
 2.0.1 (2015):
@@ -21,4 +22,5 @@ Your Browser Is: Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, l
 -----------
 First version.
 Seems to have tabs, but that might be a fluke.
-Does not work at all with HTTPS sites.
+Works with HTTPS sites.
+Your Browser Is: Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) TikBew/1.0 Safari/538.1
