@@ -1,3 +1,7 @@
+TODO:
+-----
+Seems to crash when the last tab is closed. Find a way to fix that.
+
 2.0.2 (2020-12-25):
 -------------------
 Built with Qt 5.5.1.
