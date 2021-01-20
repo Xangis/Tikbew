@@ -293,7 +293,20 @@ void MainWindow::LoadSettings()
     _settings = new QSettings();
     QString loadedURLs = _settings->value("loadedURLs").toString();
     QStringList urls = loadedURLs.split(";;");
-    for( int i = 0; i < urls.count(); i++)
+    if( urls.count() > 0 )
+    {
+        for( int i = 0; i < urls.count(); i++)
+        {
+            TikWebView* newTab = new TikWebView(this);
+            _tabs->addTab(newTab, "TikBew");
+            connect(newTab, SIGNAL(urlChanged(QUrl)), this, SLOT(UpdateUrl()));
+            connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
+            connect(newTab, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
+            connect(newTab, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
+            newTab->setUrl(QUrl(urls[i]));
+        }
+    }
+    else
     {
         TikWebView* newTab = new TikWebView(this);
         _tabs->addTab(newTab, "TikBew");
@@ -301,7 +314,7 @@ void MainWindow::LoadSettings()
         connect(newTab, SIGNAL(titleChanged(QString)), this, SLOT(UpdateTitle()));
         connect(newTab, SIGNAL(loadStarted()), this, SLOT(LoadStarted()));
         connect(newTab, SIGNAL(loadFinished(bool)), this, SLOT(LoadFinished(bool)));
-        newTab->setUrl(QUrl(urls[i]));
+        newTab->setUrl(QUrl("https://wbsrch.com"));
     }
     QString bookmarkedURLs = _settings->value("bookmarkedURLs").toString();
     QStringList bookmarks = bookmarkedURLs.split(";;");
