@@ -405,7 +405,12 @@ void MainWindow::OnAddTab()
 
 void MainWindow::OnButtonGoClick()
 {
-    QUrl url = QUrl::fromUserInput(_txtURL->currentText());
+    QString text = _txtURL->currentText();
+    if( !text.startsWith("http"))
+    {
+        text = QString("https://") + text;
+    }
+    QUrl url = QUrl::fromUserInput(text);
     QMessageBox box;
 //    box.setWindowTitle("Go clicked.");
 //    box.setText(url);
@@ -428,7 +433,7 @@ void MainWindow::OnButtonHomeClick()
 void MainWindow::OnAbout()
 {
     QMessageBox::about(this, QString("TikBew ") + QString(VERSION_STRING),
-                       QString("TikBew ") + QString(VERSION_STRING) + QString("\nCopyright 2014-2020 Lambda Centauri.\nDeveloped by Jason Champion.\nTikBew is free software and may be distributed freely.\nhttps://lambdacentauri.com/software_tikbew.htm\nTikBew uses the Qt libraries."));
+                       QString("TikBew ") + QString(VERSION_STRING) + QString("\nCopyright 2014-2021 Lambda Centauri.\nDeveloped by Jason Champion.\nTikBew is free software and may be distributed freely.\nhttps://lambdacentauri.com/software_tikbew.htm\nTikBew uses the Qt libraries."));
 }
 
 /**

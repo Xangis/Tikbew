@@ -2,6 +2,12 @@ TODO:
 -----
 Seems to crash when the last tab is closed. Find a way to fix that.
 
+2.0.3 (2021-01-28):
+-------------------
+
+Naked URL now defaults to loading the https:// version of a site.
+Your Browser Is: Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) TikBew/2.03 Safari/538.1
+
 2.0.2 (2020-12-25):
 -------------------
 Built with Qt 5.5.1.

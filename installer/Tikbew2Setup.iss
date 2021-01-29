@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TikBew"
-#define MyAppVersion "2.0.2"
+#define MyAppVersion "2.0.3"
 #define MyAppPublisher "Lambda Centauri"
 #define MyAppURL "https://lambdacentauri.com/software_tikbew.htm"
 #define MyAppExeName "Tikbew.exe"
@@ -39,19 +39,19 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-;Source: "{#CodeDir}\installer\D3Dcompiler_47.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\D3Dcompiler_47.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\icudt54.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\icuin54.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\icuuc54.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\libssl32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\libstdc++-6.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\libwinpthread-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#CodeDir}\installer\License.txt"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\opengl32sw.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\License.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\opengl32sw.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\Qt5Multimedia.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -64,7 +64,7 @@ Source: "{#CodeDir}\installer\Qt5Qml.dll"; DestDir: "{app}"; Flags: ignoreversio
 Source: "{#CodeDir}\installer\Qt5Quick.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\Qt5Sensors.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\Qt5Sql.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\Qt5Svg.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\Qt5Svg.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\Qt5WebChannel.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\Qt5Webkit.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\Qt5WebkitWidgets.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -75,15 +75,15 @@ Source: "{#CodeDir}\installer\Tikbew.exe"; DestDir: "{app}"; Flags: ignoreversio
 Source: "{#CodeDir}\installer\TikBew32.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\TikBew32.png"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\TikBew64.png"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\audio\*"; DestDir: "{app}\audio"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\bearer\*.*"; DestDir: "{app}\bearer"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\iconengines\*.*"; DestDir: "{app}\iconengines"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\imageformats\*.*"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\mediaservice\*.*"; DestDir: "{app}\mediaservice"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\audio\*"; DestDir: "{app}\audio"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\bearer\*.*"; DestDir: "{app}\bearer"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\iconengines\*.*"; DestDir: "{app}\iconengines"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\imageformats\*.*"; DestDir: "{app}\imageformats"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\mediaservice\*.*"; DestDir: "{app}\mediaservice"; Flags: ignoreversion
 Source: "{#CodeDir}\installer\platforms\qwindows.dll"; DestDir: "{app}\platforms"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\playlistformats\*.*"; DestDir: "{app}\playlistformats"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\position\*.*"; DestDir: "{app}\position"; Flags: ignoreversion
-;Source: "{#CodeDir}\installer\printsupport\*.*"; DestDir: "{app}\printsupport"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\playlistformats\*.*"; DestDir: "{app}\playlistformats"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\position\*.*"; DestDir: "{app}\position"; Flags: ignoreversion
+Source: "{#CodeDir}\installer\printsupport\*.*"; DestDir: "{app}\printsupport"; Flags: ignoreversion
 ;Source: "{#CodeDir}\installer\sensorgestures\*.*"; DestDir: "{app}\sensorgestures"; Flags: ignoreversion
 ;Source: "{#CodeDir}\installer\sensors\*.*"; DestDir: "{app}\sensors"; Flags: ignoreversion
 ;Source: "{#CodeDir}\installer\sqldrivers\*.*"; DestDir: "{app}\sqldrivers"; Flags: ignoreversion

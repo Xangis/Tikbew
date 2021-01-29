@@ -11,7 +11,7 @@
 #include <QComboBox>
 #include "URLBar.h"
 
-#define VERSION_STRING "2.02"
+#define VERSION_STRING "2.03"
 #define HOME_URL "https://wbsrch.com"
 
 class MainWindow: public QDialog
